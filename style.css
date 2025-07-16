@@ -1,0 +1,9 @@
+.paragraph {
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.my-card {
+    max-width: '400px';
+    margin: 20px auto;
+}
