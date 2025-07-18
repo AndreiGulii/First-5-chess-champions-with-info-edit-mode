@@ -38,10 +38,10 @@ const champions = [
   },
 ];
 
-const Champion = ({ name, years, photo }) => {
+const Champion = ({ name, years, photo, handleEditChampion, index }) => {
   const [isEdit, setIsEdit] = React.useState(false);
-  const [nameChanged, setName] = React.useState(name);
-  const [yearsChanged, setYears] = React.useState(years);
+  //const [nameChanged, setName] = React.useState(name);
+  //const [yearsChanged, setYears] = React.useState(years);
 
   // 1. Создание абстрактной (не связанной с конкретным элементом) ссылки
   const inputName = React.useRef();
@@ -52,26 +52,38 @@ const Champion = ({ name, years, photo }) => {
       <img className="card-img-top" src={photo} alt={name} />
       <div className="card-body">
         <div className="d-flex justify-content-center mt-2">
-        <label className="my-2">Name :
-          <input className="form-control" ref={inputName} type="text" defaultValue={nameChanged} />
-        </label>
+          <label className="my-2">
+            Name :
+            <input
+              className="form-control"
+              ref={inputName}
+              type="text"
+              defaultValue={name}
+            />
+          </label>
         </div>
         <div className="d-flex justify-content-center mt-2">
-        <label className="ms-2 my-2">Years :
-        <input className="form-control mr-2" ref={inputYears} type="text" defaultValue={yearsChanged} />
-        </label>
+          <label className="ms-2 my-2">
+            Years :
+            <input
+              className="form-control mr-2"
+              ref={inputYears}
+              type="text"
+              defaultValue={years}
+            />
+          </label>
         </div>
         <div className="d-flex justify-content-center mt-2">
-        <button
-          className="btn btn-success mx-3"
-          onClick={() => {
-            champions.name = setName(inputName.current.value);
-            years = setYears(inputYears.current.value);
-            setIsEdit(false);
-          }}
-        >
-          Save
-        </button>
+          <button
+            className="btn btn-success mx-3"
+            onClick={() => {
+              champions.name = setName(inputName.current.value);
+              years = setYears(inputYears.current.value);
+              setIsEdit(false);
+            }}
+          >
+            Save
+          </button>
         </div>
       </div>
     </div>
@@ -79,31 +91,54 @@ const Champion = ({ name, years, photo }) => {
     <div className="card mx-auto my-3" style={{ maxWidth: "400px" }}>
       <img className="card-img-top" src={photo} alt={name} />
       <div className="card-body">
-        <h1 className="card-title text-center">{nameChanged}</h1>
-        <p className="card-text text-center">{yearsChanged}</p>
+        <h1 className="card-title text-center">{name}</h1>
+        <p className="card-text text-center">{years}</p>
         <div className="d-flex justify-content-center">
-        <button className="btn btn-warning me-2" onClick={() => setIsEdit(true)}>
-          Edit Name or Years
-        </button>
-        <button className="btn btn-danger me-2" onClick={() => setIsEdit(true)}>
-          Delete
-        </button>
+          <button
+            className="btn btn-warning me-2"
+            onClick={() => setIsEdit(true)}
+          >
+            Edit Name or Years
+          </button>
+          <button
+            className="btn btn-danger me-2"
+            onClick={() => setIsEdit(true)}
+          >
+            Delete
+          </button>
         </div>
       </div>
     </div>
   );
 };
 
-root.render(
-  <>
-    <h1 style={{ textAlign: "center" }}>Чемпионы мира по шахматам</h1>
-    {champions.map(({ id, name, yearsOfChampions, photoUrl }) => (
-      <Champion
-        key={id}
-        name={name}
-        years={yearsOfChampions}
-        photo={photoUrl}
-      />
-    ))}
-  </>
-);
+const ChampionList = () => {
+  const [listOfChampions, setListOfChampions] = React.useState(champions);
+
+  const handleEditChampion = (index, newName, newYears) => {
+    // Локальное состояние State не изменяемое поэтому создадим копию State
+    const copyListOfChampions = [...listOfChampions];
+
+    // Меняем копию на новое значение
+    copyListOfChampions[index].name = newName;
+    copyListOfChampions[index].name = newYears;
+
+    setListOfChampions(copyListOfChampions);
+  };
+
+  return (
+    <>
+      <h1 style={{ textAlign: "center" }}>Чемпионы мира по шахматам</h1>
+      {listOfChampions.map(({ id, name, yearsOfChampions, photoUrl }) => (
+        <Champion
+          key={id}
+          name={name}
+          years={yearsOfChampions}
+          photo={photoUrl}
+          handleEditChampion={handleEditChampion}
+        />
+      ))}
+    </>
+  );
+};
+root.render(<ChampionList />);
